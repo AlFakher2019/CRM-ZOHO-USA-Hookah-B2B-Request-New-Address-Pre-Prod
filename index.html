@@ -24,8 +24,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/google-libphonenumber/3.2.13/libphonenumber.min.js"></script>
     <style>
       .state-dropdown,
-      .state-text
-      {
+      .state-text {
         display: none;
       }
     </style>
@@ -162,6 +161,7 @@
                           valType="number"
                           phoneFormatType="1"
                           placeholder=""
+                          oninput="this.value = this.value.replace(/[^0-9+]/g, '')"
                         />
                       </div>
                       <div class="col2"></div>
@@ -510,19 +510,20 @@
                       <div class="zf-flLeft zf-addtwo col2">
                         <label class="zf-labelName"
                           >State &#x2f; Region &#x2f; Province<em
-                            class="zf-important star" id="state_star"
+                            class="zf-important star"
+                            id="state_star"
                             >*</em
                           ></label
                         >
                         <select
-                        class="state-dropdown zf-form-sBox"
-                        checktype="c1"
-                        placeholder=""
-                      >
-                        <option value="" selected="selected" disabled>
-                          Select State
-                        </option>
-                      </select>
+                          class="state-dropdown zf-form-sBox"
+                          checktype="c1"
+                          placeholder=""
+                        >
+                          <option value="" selected="selected" disabled>
+                            Select State
+                          </option>
+                        </select>
                         <input
                           type="text"
                           class="Address_Region state-text"
@@ -1168,7 +1169,7 @@
       document.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
           event.preventDefault(); // Prevent form from being submitted through enter key
-          console.log("hello")
+          console.log("hello");
           zf_ValidateAndSubmit();
         }
       });
