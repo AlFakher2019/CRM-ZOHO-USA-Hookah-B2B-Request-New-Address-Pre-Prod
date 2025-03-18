@@ -969,7 +969,7 @@
           filteredOptions.forEach((option) => {
             $(".street").val(option.Line1);
             $(".city-text").val(option.City);
-            $("#stateLabel").val(option.ProvinceName);
+            $("#stateLabel").val(option.ProvinceCode);
             $(".state-dropdown").val(option.ProvinceCode).change();
             $("#postalCode").val(option.PostalCode);
             dropdownList.empty();
