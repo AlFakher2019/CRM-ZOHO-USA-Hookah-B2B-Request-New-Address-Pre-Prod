@@ -545,7 +545,7 @@ select:focus-visible {
   font-family: "Poppins", sans-serif;
   overflow: hidden;
   padding: 22px 0px 6px 0px;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .zf-date .zf-tempContDiv span label {
@@ -1359,6 +1359,7 @@ select {
 }
 .upara{
   font-size: 12px;
+  font-weight: 400 !important;
     border-radius: 8px;
     border: 1px solid #D7D8DB;
     padding: 12px;
