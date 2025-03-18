@@ -185,7 +185,6 @@ countySel.value="USA";
       stateText.value = "";
       cityText.value = "";
       zipText.value = "";
-      countyInput.value = "";
 
       for (var state in States[selectedCountryCode]) {
         stateDropdown.options[stateDropdown.options.length] = new Option(
@@ -205,7 +204,6 @@ countySel.value="USA";
       stateText.value = "";
       cityText.value = "";
       zipText.value = "";
-      countyInput.value = "";
       stateLabel.value = "";
 
       // zipText.readOnly = false;
