@@ -180,7 +180,7 @@
               </li>
               <!---------Phone Ends Here---------->
               <!---------Email Starts Here---------->
-              <li class="zf-tempFrmWrapper zf-large" style="display: none">
+              <li class="zf-tempFrmWrapper zf-large" style="display: block">
                 <label class="zf-labelName"> Email </label>
                 <div class="zf-tempContDiv">
                   <span>
@@ -780,20 +780,6 @@
           }
         });
     </script>
-    <script>
-      window.addEventListener("message", function (event) {
-        var email = event.data;
-        document.getElementById("Email").value = email;
-        let checkField = setInterval(function () {
-          if ($("#Email").val() !== "") {
-            $("#loader").hide();
-            clearInterval(checkField);
-          }
-        }, 100);
-        $("#loader").hide();
-      });
-    </script>
-
     <!-- loqate API -->
     <script>
       const dropdownList = $(".dropdown-list");
@@ -1169,6 +1155,19 @@
           event.preventDefault(); // Prevent form from being submitted through enter key
           zf_ValidateAndSubmit();
         }
+      });
+    </script>
+    <script>
+      window.addEventListener("message", function (event) {
+        var email = event.data;
+        document.getElementById("Email").value = email;
+        let checkField = setInterval(function () {
+          if ($("#Email").val() !== "") {
+            $("#loader").hide();
+            clearInterval(checkField);
+          }
+        }, 100);
+        $("#loader").hide();
       });
     </script>
   </body>
