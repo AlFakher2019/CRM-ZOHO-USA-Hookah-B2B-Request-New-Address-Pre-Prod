@@ -544,7 +544,7 @@ select:focus-visible {
 .zf-templateWrapper .zf-note {
   font-family: "Poppins", sans-serif;
   overflow: hidden;
-  padding: 22px 0px 6px 0px;
+  padding: 20px 0px 6px 0px;
   font-weight: 600;
 }
 
