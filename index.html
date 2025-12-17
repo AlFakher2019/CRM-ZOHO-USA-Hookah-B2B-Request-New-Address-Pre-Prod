@@ -272,6 +272,7 @@
                         class="zf-form-sBox dropdown-countries"
                         name="Dropdown3"
                         checktype="c1"
+                        id="countryDropdown"
                       >
                         <option value="" id="country" selected="selected">
                           Select an option
@@ -782,28 +783,50 @@
         });
     </script>
     <!-- loqate API -->
-    <script>
+   <script>
+      const LOQATE_API_KEY = "TY78-BD75-NW81-XE97";
       const dropdownList = $(".dropdown-list");
       const addressInfo = $(".addressInfo");
 
       function fetchData(query, callback) {
-        $.get(query, callback);
+        console.log("Fetching:", query);
+        $.get(query)
+          .done(function(data) {
+            console.log("API Response:", data);
+            callback(data);
+          })
+          .fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("API Error:", textStatus, errorThrown);
+            console.error("Response:", jqXHR.responseText);
+            dropdownList.empty();
+          });
       }
-      // Function to handle the search input
+      
       function searchDropdown() {
-        var country = $(".dropdown-countries").find(":selected").text();
-        var country_val = $(".dropdown-countries").find(":selected").val();
-        if (country_val == "USA") {
-          var city = $(".Address_City").val();
-          var zipCode = $(".Address_ZipCode").val();
+        var country_val = $("#countryDropdown").val();
+        console.log("searchDropdown called, country:", country_val);
+        
+        var countryMap = {
+          "USA": "US",
+          "CAN": "CA",
+          "MEX": "MX"
+        };
+        
+        var apiCountryCode = countryMap[country_val];
+        console.log("Mapped to API code:", apiCountryCode);
+        
+        if (apiCountryCode) {
           var inputLength = $("#searchInput").val().length;
           if (inputLength > 0) {
-            const query = `https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key=TY78-BD75-NW81-XE97&Countries=US&Limit=20&Text=${$(
-              "#searchInput"
-            ).val()}`;
+            const searchText = $("#searchInput").val();
+            const query = `https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key=${LOQATE_API_KEY}&Countries=${apiCountryCode}&Limit=20&Text=${encodeURIComponent(searchText)}`;
 
-            // Call the API to get data based on the search query
             fetchData(query, (data) => {
+              if (!data || !data.Items || data.Items.length === 0) {
+                dropdownList.empty();
+                console.log("No results found");
+                return;
+              }
               const filteredOptions = data.Items;
               dropdownList.empty();
               filteredOptions.forEach((option) => {
@@ -849,14 +872,28 @@
             dropdownList.empty();
           }
         } else {
+          console.log("Country not supported for address lookup");
           dropdownList.empty();
         }
       }
 
       function callback(e, thisObj) {
         let id = thisObj.id;
-        const query = `https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key=TY78-BD75-NW81-XE97&Countries=US&Limit=20&Container=${id}`;
+        var country_val = $("#countryDropdown").val();
+        
+        var countryMap = {
+          "USA": "US",
+          "CAN": "CA",
+          "MEX": "MX"
+        };
+        
+        var apiCountryCode = countryMap[country_val] || "US";
+        
+        const query = `https://api.addressy.com/Capture/Interactive/Find/v1.10/json3.ws?Key=${LOQATE_API_KEY}&Countries=${apiCountryCode}&Limit=20&Container=${encodeURIComponent(id)}`;
         fetchData(query, (data) => {
+          if (!data || !data.Items || data.Items.length === 0) {
+            return;
+          }
           const filteredOptions = data.Items;
           dropdownList.empty();
           dropdownList.css({ "max-height": "300px", "overflow-y": "auto" });
@@ -948,7 +985,7 @@
 
       function getAddressDetail(e, thisObj) {
         let id = thisObj.id;
-        const query = `https://api.addressy.com/Capture/Interactive/Retrieve/v1.2/json3.ws?Key=TY78-BD75-NW81-XE97&Id=${id}`;
+        const query = `https://api.addressy.com/Capture/Interactive/Retrieve/v1.2/json3.ws?Key=${LOQATE_API_KEY}&Id=${encodeURIComponent(id)}`;
         fetchData(query, (data) => {
           const filteredOptions = data.Items;
           filteredOptions.forEach((option) => {
@@ -961,19 +998,16 @@
           });
         });
       }
+      
       var input = document.querySelector(
         "#international_PhoneNumber_countrycode"
       );
-      // Event listener to ensure the "+" is always there
       input.addEventListener("input", function () {
-        // If "+" is removed, add it back
         if (!input.value.startsWith("+")) {
-          input.value = "+" + input.value.replace(/[^0-9]/g, ""); // Only allow digits after "+"
+          input.value = "+" + input.value.replace(/[^0-9]/g, "");
         }
       });
-      var input = document.querySelector(
-        "#international_PhoneNumber_countrycode"
-      );
+      
       var iti = window.intlTelInput(input, {
         separateDialCode: false,
         preferredCountries: ["US"],
@@ -982,163 +1016,10 @@
         utilsScript:
           "//cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.3/js/utils.js",
         onlyCountries: [
-          "AX",
-          "AS",
-          "AD",
-          "AI",
-          "AR",
-          "AM",
-          "AW",
-          "AT",
-          "BS",
-          "BH",
-          "BD",
-          "BB",
-          "BE",
-          "BZ",
-          "BM",
-          "BO",
-          "BA",
-          "BR",
-          "IO",
-          "VG",
-          "BG",
-          "KH",
-          "CA",
-          "KY",
-          "CL",
-          "CN",
-          "CX",
-          "CC",
-          "CO",
-          "CK",
-          "CR",
-          "HR",
-          "CY",
-          "CZ",
-          "DK",
-          "DM",
-          "DO",
-          "EC",
-          "SV",
-          "EE",
-          "FK",
-          "FO",
-          "FJ",
-          "FI",
-          "GE",
-          "DE",
-          "GI",
-          "GR",
-          "GL",
-          "GD",
-          "GP",
-          "GU",
-          "GT",
-          "GG",
-          "HM",
-          "HN",
-          "HK",
-          "HU",
-          "IS",
-          "IN",
-          "ID",
-          "IQ",
-          "IE",
-          "IM",
-          "IT",
-          "JM",
-          "JP",
-          "JE",
-          "JO",
-          "KZ",
-          "KI",
-          "KW",
-          "KG",
-          "LV",
-          "LB",
-          "LI",
-          "LT",
-          "LU",
-          "MO",
-          "MY",
-          "MV",
-          "MT",
-          "MH",
-          "MQ",
-          "YT",
-          "MX",
-          "FM",
-          "MD",
-          "MC",
-          "MN",
-          "ME",
-          "MS",
-          "NR",
-          "NP",
-          "NL",
-          "NC",
-          "NI",
-          "NU",
-          "NF",
-          "MK",
-          "MP",
-          "NO",
-          "OM",
-          "PW",
-          "PA",
-          "PG",
-          "PY",
-          "PE",
-          "PH",
-          "PN",
-          "PL",
-          "PT",
-          "QA",
-          "SM",
-          "SA",
-          "RS",
-          "SG",
-          "SK",
-          "SI",
-          "SB",
-          "ZA",
-          "GS",
-          "KR",
-          "ES",
-          "LK",
-          "BL",
-          "SH",
-          "KN",
-          "LC",
-          "MF",
-          "PM",
-          "VC",
-          "SJ",
-          "SE",
-          "CH",
-          "TW",
-          "TJ",
-          "TH",
-          "TO",
-          "TT",
-          "TR",
-          "TC",
-          "UM",
-          "VI",
-          "UA",
-          "AE",
-          "GB",
-          "US",
-          "UY",
-          "UZ",
-          "VA",
-          "VE",
-          "VN",
-          "WF",
-          "EH",
+          "AX","AS","AD","AI","AR","AM","AW","AT","BS","BH","BD","BB","BE","BZ","BM","BO","BA","BR","IO","VG","BG","KH","CA","KY","CL","CN","CX","CC","CO","CK","CR","HR","CY","CZ","DK","DM","DO","EC","SV","EE","FK","FO","FJ","FI","GE","DE","GI","GR","GL","GD","GP","GU","GT","GG","HM","HN","HK","HU","IS","IN","ID","IQ","IE","IM","IT","JM","JP","JE","JO","KZ","KI","KW","KG","LV","LB","LI","LT","LU","MO","MY","MV","MT","MH","MQ","YT","MX","FM","MD","MC","MN","ME","MS","NR","NP","NL","NC","NI","NU","NF","MK","MP","NO","OM","PW","PA","PG","PY","PE","PH","PN","PL","PT","QA","SM","SA","RS","SG","SK","SI","SB","ZA","GS","KR","ES","LK","BL","SH","KN","LC","MF","PM","VC","SJ","SE","CH","TW","TJ","TH","TO","TT","TR","TC","UM","VI","UA","AE","GB","US","UY","UZ","VA","VE","VN","WF","EH",
         ],
       });
+      
       document
         .querySelector("#international_PhoneNumber_countrycode")
         .addEventListener("countrychange", function () {
@@ -1151,9 +1032,10 @@
           var event = new Event("change");
           countySel.dispatchEvent(event);
         });
+        
       document.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
-          event.preventDefault(); // Prevent form from being submitted through enter key
+          event.preventDefault();
           zf_ValidateAndSubmit();
         }
       });
