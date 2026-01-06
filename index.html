@@ -984,20 +984,73 @@
       }
 
       function getAddressDetail(e, thisObj) {
-        let id = thisObj.id;
-        const query = `https://api.addressy.com/Capture/Interactive/Retrieve/v1.2/json3.ws?Key=${LOQATE_API_KEY}&Id=${encodeURIComponent(id)}`;
-        fetchData(query, (data) => {
-          const filteredOptions = data.Items;
-          filteredOptions.forEach((option) => {
-            $(".street").val(option.Line1);
-            $(".city-text").val(option.City);
-            $("#stateLabel").val(option.ProvinceCode);
-            $(".state-dropdown").val(option.ProvinceCode).change();
-            $("#postalCode").val(option.PostalCode);
-            dropdownList.empty();
-          });
-        });
+  let id = thisObj.id;
+  const query = `https://api.addressy.com/Capture/Interactive/Retrieve/v1.2/json3.ws?Key=${LOQATE_API_KEY}&Id=${encodeURIComponent(id)}`;
+  
+  fetchData(query, (data) => {
+    const filteredOptions = data.Items;
+    filteredOptions.forEach((option) => {
+      // Fill street address
+      $(".street").val(option.Line1);
+      
+      // Fill city
+      $(".city-text").val(option.City);
+      
+      // Fill postal/zip code
+      $("#postalCode").val(option.PostalCode);
+      
+      // Get the selected country
+      var selectedCountry = $("#countryDropdown").val();
+      
+      // Handle state/province based on country
+      if (selectedCountry === "USA") {
+        // For USA: use dropdown and fill with province code
+        $(".state-dropdown").val(option.ProvinceCode).change();
+        $("#stateLabel").val(option.ProvinceCode);
+      } else if (selectedCountry === "CAN" || selectedCountry === "MEX") {
+        // For Canada and Mexico: use text input and fill with province name
+        $(".state-text").val(option.ProvinceName || option.Province);
+        $("#stateLabel").val(option.ProvinceCode);
       }
+      
+      // Clear the dropdown
+      dropdownList.empty();
+    });
+  });
+}
+
+// Also update the country dropdown change event to handle state field visibility
+$(document).ready(function() {
+  $("#countryDropdown").on("change", function() {
+    var selectedCountry = $(this).val();
+    var $stateDropdown = $(".state-dropdown");
+    var $stateText = $(".state-text");
+    var $stateStar = $("#state_star");
+    
+    // Clear both fields when country changes
+    $stateDropdown.val("");
+    $stateText.val("");
+    $("#searchInput").val("");
+    $(".dropdown-list").empty();
+    
+    if (selectedCountry === "USA") {
+      // Show dropdown for USA
+      $stateDropdown.show();
+      $stateText.hide();
+      $stateStar.show();
+    } else if (selectedCountry === "CAN" || selectedCountry === "MEX") {
+      // Show text input for Canada and Mexico
+      $stateDropdown.hide();
+      $stateText.show();
+      $stateStar.show();
+    } else {
+      // For other countries, show text input but make it optional
+      $stateDropdown.hide();
+      $stateText.show();
+      $stateStar.hide();
+    }
+  });
+});
       
       var input = document.querySelector(
         "#international_PhoneNumber_countrycode"
