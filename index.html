@@ -1005,8 +1005,35 @@
       // Handle state/province based on country
       if (selectedCountry === "USA" || selectedCountry === "CAN") {
         // For USA and Canada: use dropdown and fill with province code
-        $(".state-dropdown").val(option.ProvinceCode).change();
+        console.log("Province Code from API:", option.ProvinceCode);
+        console.log("Province Name from API:", option.ProvinceName);
+        
+        var provinceCode = option.ProvinceCode;
+        
+        // For Canada, add "CA-" prefix if not already present
+        if (selectedCountry === "CAN" && provinceCode && !provinceCode.startsWith("CA-")) {
+          provinceCode = "CA-" + provinceCode;
+        }
+        
+        console.log("Modified Province Code:", provinceCode);
+        
+        // Set the hidden field
         $("#stateLabel").val(option.ProvinceCode);
+        
+        // Set the dropdown value
+        var $dropdown = $(".state-dropdown");
+        $dropdown.val(provinceCode);
+        
+        // If dropdown value wasn't set, log available options
+        if (!$dropdown.val()) {
+          console.log("Dropdown value not set. Available options:");
+          $dropdown.find('option').each(function() {
+            console.log("Option value:", $(this).val());
+          });
+        }
+        
+        // Trigger change event
+        $dropdown.trigger('change');
       } else if (selectedCountry === "MEX") {
         // For Mexico: use text input and fill with province name
         $(".state-text").val(option.ProvinceName || option.Province);
