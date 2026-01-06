@@ -1003,12 +1003,12 @@
       var selectedCountry = $("#countryDropdown").val();
       
       // Handle state/province based on country
-      if (selectedCountry === "USA") {
-        // For USA: use dropdown and fill with province code
+      if (selectedCountry === "USA" || selectedCountry === "CAN") {
+        // For USA and Canada: use dropdown and fill with province code
         $(".state-dropdown").val(option.ProvinceCode).change();
         $("#stateLabel").val(option.ProvinceCode);
-      } else if (selectedCountry === "CAN" || selectedCountry === "MEX") {
-        // For Canada and Mexico: use text input and fill with province name
+      } else if (selectedCountry === "MEX") {
+        // For Mexico: use text input and fill with province name
         $(".state-text").val(option.ProvinceName || option.Province);
         $("#stateLabel").val(option.ProvinceCode);
       }
@@ -1033,13 +1033,13 @@ $(document).ready(function() {
     $("#searchInput").val("");
     $(".dropdown-list").empty();
     
-    if (selectedCountry === "USA") {
-      // Show dropdown for USA
+    if (selectedCountry === "USA" || selectedCountry === "CAN") {
+      // Show dropdown for USA and Canada
       $stateDropdown.show();
       $stateText.hide();
       $stateStar.show();
-    } else if (selectedCountry === "CAN" || selectedCountry === "MEX") {
-      // Show text input for Canada and Mexico
+    } else if (selectedCountry === "MEX") {
+      // Show text input for Mexico
       $stateDropdown.hide();
       $stateText.show();
       $stateStar.show();
